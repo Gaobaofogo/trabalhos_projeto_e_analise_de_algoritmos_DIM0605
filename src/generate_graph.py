@@ -1,6 +1,6 @@
 import pandas as pd
-from read_data_convert_dataframe import parse_file
-from noh import Noh
+from src.read_data_convert_dataframe import parse_file
+from src.noh import Noh
 
 
 def problem_generator(file_name):

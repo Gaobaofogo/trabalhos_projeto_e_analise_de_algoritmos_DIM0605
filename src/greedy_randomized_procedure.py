@@ -2,13 +2,20 @@ import random
 
 from copy import deepcopy
 
-from generate_graph import problem_generator
-from noh import Noh, busca_em_profundidade
+from src.generate_graph import problem_generator
+from src.noh import Noh, busca_em_profundidade
 
 def greedy_randomized_procedure(initial_node, all_ids_nodes, available_resources, alfa):
+    '''
+    Essa função representa a fase construtiva onde o resultado é uma lista contendo a sequência
+    de tarefas a serem executadas por aquele projeto visando o menor custo encontrado nessa execução.
+    A função é criada baseada na seção 5.2 do artigo:
+        A HYBRID HEURISTIC ALGORITHM FOR SOLVING THE
+        RESOURCE CONSTRAINED PROJECT SCHEDULING PROBLEM (RCPSP)
+    '''
     activity_list_result = []
     total_time = 0
-    already_processed_id_nodes = [1]
+    already_processed_id_nodes = [all_ids_nodes[0], all_ids_nodes[-1]]
     in_process_nodes = []
     not_processed_id_nodes = all_ids_nodes[1:-1]
     all_ids_activitie_nodes = all_ids_nodes[1:-1]
@@ -26,10 +33,7 @@ def greedy_randomized_procedure(initial_node, all_ids_nodes, available_resources
     except Exception:
         pass
 
-    print()
-
-    while len(already_processed_id_nodes) != len(all_ids_activitie_nodes):
-        # print(f"{len(already_processed_id_nodes)} - {len(all_ids_activitie_nodes)} - {total_time}")
+    while len(already_processed_id_nodes) <= len(all_ids_activitie_nodes):
         # Aqui o tempo passa em uma unidade para todos. Assim, deve ser decrementado a variável custo_de_tempo em uma unidade
         total_time += 1
         for noh in in_process_nodes:
@@ -43,14 +47,6 @@ def greedy_randomized_procedure(initial_node, all_ids_nodes, available_resources
         for node in to_remove_process_nodes:
             already_processed_id_nodes.append(node.identificador)
             actual_available_resources = increase_available_resources(actual_available_resources, node.lista_de_recursos)
-        # for i in range(len(cp_in_process_nodes)):
-        # # for i in range(len(in_process_nodes)):
-        #     # breakpoint()
-        #     if in_process_nodes[i].custo_de_tempo == 0:
-        #         removed_node = in_process_nodes.pop(i)
-        #         # del in_process_nodes[i]
-        #         already_processed_id_nodes.append(removed_node.identificador)
-        #         actual_available_resources = increase_available_resources(actual_available_resources, removed_node.lista_de_recursos)
 
         # Aqui pegamos todos os sucessores dos nós que podem ser elegíveis como candidatos a serem processados naquele momento de tempo
         # Que são os sucessores dos nós que já foram processados que todos os antecessores já foram processados
@@ -59,6 +55,7 @@ def greedy_randomized_procedure(initial_node, all_ids_nodes, available_resources
         for sucessors_nodes in alrd_processed_nodes:
             for s in sucessors_nodes.sucessores:
                 sucessors_processed_nodes.append(s)
+
         sucessors_processed_nodes_ids = set([suc.identificador for suc in sucessors_processed_nodes])
         in_process_nodes_ids = set([noh.identificador for noh in in_process_nodes])
         actual_sucessors_ids = list((sucessors_processed_nodes_ids - set(already_processed_id_nodes)) - in_process_nodes_ids)
@@ -77,15 +74,10 @@ def greedy_randomized_procedure(initial_node, all_ids_nodes, available_resources
             except Exception:
                 pass
 
-        print(in_process_nodes)
-        if len(in_process_nodes) > 0 and in_process_nodes[0].custo_de_tempo == 0:
-            print("Deu ruim em dobro")
-            print(in_process_nodes[0].identificador)
-            break
-
     return activity_list_result, total_time
 
 def decrease_available_resources(available_resources, selected_resources):
+    ''' Função auxiliar para retirar os recursos para que uma tarefa possa executar algo '''
     for k in range(len(available_resources)):
         if available_resources[k] - selected_resources[k] < 0:
             return False, []
@@ -96,12 +88,18 @@ def decrease_available_resources(available_resources, selected_resources):
     return True, available_resources
 
 def increase_available_resources(available_resources, selected_resources):
+    ''' Função auxiliar para reinserir os recursos que uma tarefa tinha alocado previamente '''
     for k in range(len(available_resources)):
         available_resources[k] += selected_resources[k]
 
     return available_resources
 
 def restricted_candidate_list(nohs, resources_activities, alfa):
+    '''
+    Essa função representa a equação (7) do artigo:
+        A HYBRID HEURISTIC ALGORITHM FOR SOLVING THE
+        RESOURCE CONSTRAINED PROJECT SCHEDULING PROBLEM (RCPSP)
+    '''
     candidate_list = []
 
     for i in range(len(nohs)):
@@ -111,6 +109,11 @@ def restricted_candidate_list(nohs, resources_activities, alfa):
     return candidate_list
 
 def resources(can_be_scheduled_activities, scheduled_activities, R):
+    '''
+    Essa função representa a equação (6) do artigo:
+        A HYBRID HEURISTIC ALGORITHM FOR SOLVING THE
+        RESOURCE CONSTRAINED PROJECT SCHEDULING PROBLEM (RCPSP)
+    '''
     resources_total = []
     for i in range(len(can_be_scheduled_activities)):
         actual_resource_value = 0
