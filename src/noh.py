@@ -27,3 +27,13 @@ class Noh:
 
     def get_predecessores(self):
         return self.predecessores
+    
+    def __repr__(self):
+        # lista_s = []
+        # lista_pre = []
+        # for item in self.sucessores:
+        #     lista_s.append(item.identificador)
+        # for item in self.predecessores:
+        #     lista_pre.append(item.identificador)
+        # return f"No({self.identificador:6} | {lista_s} | {lista_pre})"
+        return f"No({self.identificador})"
