@@ -22,6 +22,9 @@ class Noh:
     def get_lista_de_recursos(self):
         return self.lista_de_recursos
 
+    def get_valor_total_lista_de_recursos(self):
+        return sum(self.lista_de_recursos)
+
     def get_sucessores(self):
         return self.sucessores
 
@@ -37,3 +40,20 @@ class Noh:
         #     lista_pre.append(item.identificador)
         # return f"No({self.identificador:6} | {lista_s} | {lista_pre})"
         return f"No({self.identificador})"
+
+def busca_em_profundidade(identificador, noh, visitados=None):
+    if visitados is None:
+        visitados = set()
+
+    visitados.add(noh)
+
+    if noh.get_id() == identificador:
+        return noh
+
+    for sucessor in noh.get_sucessores():
+        if sucessor not in visitados:
+            resultado = busca_em_profundidade(identificador, sucessor, visitados)
+            if resultado is not None:
+                return resultado
+
+    return None
