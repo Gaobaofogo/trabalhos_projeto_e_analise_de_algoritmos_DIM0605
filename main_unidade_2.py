@@ -2,6 +2,7 @@ import argparse
 
 from src.backtracking_for_rcpsp import backtracking_for_rcpsp
 from src.generate_graph import problem_generator
+from src.noh import busca_em_profundidade
 
 parser = argparse.ArgumentParser(
     description="Programa para encontrar uma solução de execução para o problema RCPSP"
@@ -23,7 +24,13 @@ parser.add_argument(
 args = parser.parse_args()
 
 initial_node, all_ids_nodes, available_resources = problem_generator(args.file)
+total = 0
+for id in all_ids_nodes[1:-1]:
+    node = busca_em_profundidade(id, initial_node)
+    print(id, node.predecessores)
+    total += node.custo_de_tempo
+print(total)
 resultado = backtracking_for_rcpsp(
-    initial_node, all_ids_nodes[1:-1], available_resources, [], [], 0
+    initial_node, all_ids_nodes[1:-1], available_resources, [1], [], 0
 )
 print(resultado)

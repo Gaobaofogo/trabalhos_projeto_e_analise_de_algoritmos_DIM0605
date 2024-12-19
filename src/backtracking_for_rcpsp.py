@@ -26,8 +26,12 @@ def backtracking_for_rcpsp(
             5
 
         """
+        if node_id == 2:
+            node = busca_em_profundidade(node_id, initial_node)
+            print(node.predecessores)
+            print(can_be_processed(initial_node, node_id, processed_ids))
         if can_be_processed(initial_node, node_id, processed_ids):
-            print(node_id, len(processed_ids), processed_ids)
+            print(processed_ids)
             node = busca_em_profundidade(node_id, initial_node)
             result_processed_ids = backtracking_for_rcpsp(
                 initial_node,
@@ -43,13 +47,23 @@ def backtracking_for_rcpsp(
 
 
 def can_be_processed(initial_node, node_id, processed_ids):
+    if node_id == 2:
+        if node_id in processed_ids:
+            return False
+
+        node = busca_em_profundidade(node_id, initial_node)
+
+        for pred in node.predecessores:
+            if pred.identificador not in processed_ids:
+                return False
+
     if node_id in processed_ids:
         return False
 
     node = busca_em_profundidade(node_id, initial_node)
 
     for pred in node.predecessores:
-        if pred.identificador in processed_ids:
+        if pred.identificador not in processed_ids:
             return False
 
     return True
