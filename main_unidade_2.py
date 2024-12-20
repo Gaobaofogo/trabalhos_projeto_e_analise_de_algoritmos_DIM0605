@@ -25,12 +25,7 @@ args = parser.parse_args()
 
 initial_node, all_ids_nodes, available_resources = problem_generator(args.file)
 total = 0
-for id in all_ids_nodes[1:-1]:
-    node = busca_em_profundidade(id, initial_node)
-    print(id, node.predecessores)
-    total += node.custo_de_tempo
-print(total)
 resultado = backtracking_for_rcpsp(
-    initial_node, all_ids_nodes[1:-1], available_resources, [1], [], 0
+    initial_node, all_ids_nodes[1:-1], available_resources, [(1, -1)], [], 0
 )
 print(resultado)

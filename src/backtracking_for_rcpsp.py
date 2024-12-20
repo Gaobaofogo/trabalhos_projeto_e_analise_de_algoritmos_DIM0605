@@ -9,54 +9,46 @@ def backtracking_for_rcpsp(
     in_process_nodes,
     total_processing_time,
 ):
-    if len(all_valid_node_ids) == len(processed_ids):
+    if len(all_valid_node_ids) + 1 == len(processed_ids):
         return processed_ids, total_processing_time
 
     for node_id in all_valid_node_ids:
-        """
-        A cada iteração do algoritmo eu vou pegando um novo nó para ir processando. Porém, como que eu vou
-        contabilizar o processamento de tempo?
+        for actual_time in range(sum([busca_em_profundidade(node_id, initial_node).custo_de_tempo for node_id in all_valid_node_ids])):
+            if can_be_processed(initial_node, node_id, processed_ids, actual_time, available_resources):
+                node = busca_em_profundidade(node_id, initial_node)
+                result_processed_ids = backtracking_for_rcpsp(
+                    initial_node,
+                    all_valid_node_ids,
+                    available_resources,
+                    processed_ids + [(node_id, actual_time)],
+                    in_process_nodes,
+                    total_processing_time + node.custo_de_tempo,
+                )
 
-        Uma ideia que eu tive é de pegar os nós elegíveis, ir botando e quando eu não puder mais
-        eu faço a contabilização do tempo. Se eu começar com processed_ids com o nó "1" eu tenho os nós iniciais
-        válidos e processo todos eles. Problema: quando vai ocorrer esse processamento?
-
-            4
-        1   2   3   6
-            5
-
-        """
-        if node_id == 2:
-            node = busca_em_profundidade(node_id, initial_node)
-            print(node.predecessores)
-            print(can_be_processed(initial_node, node_id, processed_ids))
-        if can_be_processed(initial_node, node_id, processed_ids):
-            print(processed_ids)
-            node = busca_em_profundidade(node_id, initial_node)
-            result_processed_ids = backtracking_for_rcpsp(
-                initial_node,
-                all_valid_node_ids,
-                available_resources,
-                processed_ids + [node_id],
-                in_process_nodes,
-                total_processing_time + node.custo_de_tempo,
-            )
-
-            if result_processed_ids:
-                return result_processed_ids
+                if result_processed_ids:
+                    return result_processed_ids
+        # if node_id == 2:
+        #     node = busca_em_profundidade(node_id, initial_node)
+        #     print(node.predecessores)
+        #     print(can_be_processed(initial_node, node_id, processed_ids))
+        # if can_be_processed(initial_node, node_id, processed_ids):
+        #     print(processed_ids)
+        #     node = busca_em_profundidade(node_id, initial_node)
+        #     result_processed_ids = backtracking_for_rcpsp(
+        #         initial_node,
+        #         all_valid_node_ids,
+        #         available_resources,
+        #         processed_ids + [node_id],
+        #         in_process_nodes,
+        #         total_processing_time + node.custo_de_tempo,
+        #     )
+        #
+        #     if result_processed_ids:
+        #         return result_processed_ids
 
 
-def can_be_processed(initial_node, node_id, processed_ids):
-    if node_id == 2:
-        if node_id in processed_ids:
-            return False
-
-        node = busca_em_profundidade(node_id, initial_node)
-
-        for pred in node.predecessores:
-            if pred.identificador not in processed_ids:
-                return False
-
+def can_be_processed(initial_node, node_id, processed_nodes, actual_time, available_resources):
+    processed_ids = [node[0] for node in processed_nodes]
     if node_id in processed_ids:
         return False
 
@@ -65,6 +57,12 @@ def can_be_processed(initial_node, node_id, processed_ids):
     for pred in node.predecessores:
         if pred.identificador not in processed_ids:
             return False
+    
+    ids_removal_time = []
+    for node in processed_nodes:
+        ids_removal_time.append((node[0], node[1] + busca_em_profundidade(node[0], initial_node).custo_de_tempo))
+
+    for t in range(actual_time + 1):
 
     return True
 
