@@ -29,8 +29,6 @@ tasks, resources, durations, resource_requirements, dependencies = organize_data
 problem = RCPSP(tasks, resources, durations, resource_requirements, dependencies)
 solution = problem.solve()
 
-print(solution)
-
 if solution:
     print("Solução encontrada:", solution["tasks"])
 else:
