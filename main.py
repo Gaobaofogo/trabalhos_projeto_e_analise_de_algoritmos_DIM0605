@@ -1,6 +1,6 @@
 import argparse
 
-from src.greedy_randomized_procedure import greedy_randomized_procedure
+from src.aprox.greedy_randomized_procedure import greedy_randomized_procedure
 from src.generate_graph import problem_generator
 
 parser = argparse.ArgumentParser(

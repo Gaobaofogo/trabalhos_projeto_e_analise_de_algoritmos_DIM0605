@@ -1,6 +1,6 @@
 import argparse
 
-from src.backtracking_for_rcpsp import backtracking_for_rcpsp
+from src.exato.backtracking_for_rcpsp import backtracking_for_rcpsp
 from src.generate_graph import problem_generator
 from src.noh import busca_em_profundidade
 
