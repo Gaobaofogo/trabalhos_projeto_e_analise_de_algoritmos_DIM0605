@@ -1,11 +1,11 @@
-import pandas as pd
-from read_data_convert_dataframe import parse_file
-from noh import Noh
-from generate_graph import problem_generator
+# import pandas as pd
+# from src.read_data_convert_dataframe import parse_file
+# from src.noh import Noh
+from src.generate_graph import problem_generator
 
-file_name = "../data/data/j30/j3010_1.sm"
+# file_name = "../../data/data/j30/j3010_1.sm"
 
-base_no, not_processing, resources = problem_generator("../data/data/j30/j3010_1.sm")
+base_no, not_processing, resources = problem_generator("data/data/j30/j3010_1.sm")
 
 
 def greedy_solution(base_no, not_processing, resources):
