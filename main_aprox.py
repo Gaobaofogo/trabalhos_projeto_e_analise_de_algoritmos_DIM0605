@@ -1,7 +1,7 @@
 import argparse
 
 from src.aprox.greedy_randomized_procedure import greedy_randomized_procedure
-from src.generate_graph import problem_generator
+from src.aprox.generate_graph import problem_generator
 
 parser = argparse.ArgumentParser(
     description="Programa para encontrar uma solução de execução para o problema RCPSP"

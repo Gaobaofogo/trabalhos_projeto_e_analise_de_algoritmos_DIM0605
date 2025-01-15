@@ -2,8 +2,7 @@ import random
 
 from copy import deepcopy
 
-from src.generate_graph import problem_generator
-from src.noh import Noh, busca_em_profundidade
+from src.aprox.noh import Noh, busca_em_profundidade
 
 
 def greedy_randomized_procedure(initial_node, all_ids_nodes, available_resources, alfa):
